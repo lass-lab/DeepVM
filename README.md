@@ -23,5 +23,7 @@ DeepCheck-BASE offers similar functionality to DeepCheck, supporting asynchronou
 
 ## Repository Structure
 `deepvm/`: Contains the core DeepVM solution and associated algorithms.
+
 `deepcheck/`: Includes the DeepCheck software for optimized asynchronous checkpointing.
+
 `deepcheck-base`/: Houses the baseline DeepCheck software.
