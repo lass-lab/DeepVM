@@ -4,10 +4,10 @@ This repository hosts the open-source implementation of DeepVM, a solution intro
 
 ## What is DeepVM?
 DeepVM is a novel solution for achieving efficient and cost-effective use of resources in distributed deep learning. It operates through a four-stage process:
-1. User Pricing Input: Collecting the user's maximum price per hour willingness.
-2. Instance-level Analysis: Analyzing all available instances using the 'FLOPP' (Floating-point Operations Per Price) metric to measure each instance’s performance relative to its cost.
-3. Architecture-level Analysis: Exploring the most cost-effective instance combinations within predefined architectures using linear programming, considering each architecture’s constraints and potential overheads in parallel processing.
-4. Final Decision: Identifying the best combinations for all architectures and proposing the most cost-effective cluster configuration under given conditions​​.
+1. **User Pricing Input**: Collecting the user's maximum price per hour willingness.
+2. **Instance-level Analysis**: Analyzing all available instances using the 'FLOPP' (Floating-point Operations Per Price) metric to measure each instance’s performance relative to its cost.
+3. **Architecture-level Analysis**: Exploring the most cost-effective instance combinations within predefined architectures using linear programming, considering each architecture’s constraints and potential overheads in parallel processing.
+4. **Final Decision**: Identifying the best combinations for all architectures and proposing the most cost-effective cluster configuration under given conditions​​.
 
 ## Components
 ### DeepVM
@@ -26,4 +26,4 @@ DeepCheck-BASE offers similar functionality to DeepCheck, supporting asynchronou
 
 `deepcheck/`: Includes the DeepCheck software for optimized asynchronous checkpointing.
 
-`deepcheck-base`/: Houses the baseline DeepCheck software.
+`deepcheck-base/`: Houses the baseline DeepCheck software.
