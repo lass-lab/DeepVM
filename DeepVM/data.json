@@ -1,0 +1,128 @@
+{
+    "instances": [
+        {
+            "name": "g3s.xlarge",
+            "type": "G",
+            "ondemand_price": 0.75,
+            "spot_price": 0.225,
+            "vCPU": 4,
+            "memory": 30.5,
+            "network_bandwidth": 10,
+            "flops": 100
+        },
+        {
+            "name": "g4dn.xlarge",
+            "type": "G",
+            "ondemand_price": 0.526,
+            "spot_price": 0.1578,
+            "vCPU": 4,
+            "memory": 16.0,
+            "network_bandwidth": 25,
+            "flops": 377
+        },
+        {
+            "name": "g5.xlarge",
+            "type": "G",
+            "ondemand_price": 1.006,
+            "spot_price": 0.3018,
+            "vCPU": 4,
+            "memory": 16.0,
+            "network_bandwidth": 10,
+            "flops": 696
+        },
+        {
+            "name": "c3.xlarge",
+            "type": "C",
+            "ondemand_price": 0.21,
+            "spot_price": 0.1281,
+            "vCPU": 4,
+            "memory": 7.5,
+            "network_bandwidth": 0.3
+        },
+        {
+            "name": "c4.xlarge",
+            "type": "C",
+            "ondemand_price": 0.199,
+            "spot_price": 0.1257,
+            "vCPU": 4,
+            "memory": 7.5,
+            "network_bandwidth": 1.7
+        },
+        {
+            "name": "t3.xlarge",
+            "type": "T",
+            "ondemand_price": 0.1664,
+            "spot_price": 0.1033,
+            "vCPU": 4,
+            "memory": 16.0,
+            "network_bandwidth": 5
+        },
+        {
+            "name": "c5.xlarge",
+            "type": "C",
+            "ondemand_price": 0.17,
+            "spot_price": 0.0999,
+            "vCPU": 4,
+            "memory": 8,
+            "network_bandwidth": 10
+        },
+        {
+            "name": "m6i.xlarge",
+            "type": "M",
+            "ondemand_price": 0.192,
+            "spot_price": 0.12,
+            "vCPU": 4,
+            "memory": 16.0,
+            "network_bandwidth": 12.5
+        },
+        {
+            "name": "d3.xlarge",
+            "type": "D",
+            "ondemand_price": 0.499,
+            "spot_price": 0.1584,
+            "vCPU": 4,
+            "memory": 32.0,
+            "network_bandwidth": 15
+        },
+        {
+            "name": "c5n.xlarge",
+            "type": "C",
+            "ondemand_price": 0.216,
+            "spot_price": 0.127,
+            "vCPU": 4,
+            "memory": 10.5,
+            "network_bandwidth": 25
+        },
+        {
+            "name": "c6in.xlarge",
+            "type": "C",
+            "ondemand_price": 0.2268,
+            "spot_price": 0.1272,
+            "vCPU": 4,
+            "memory": 8.0,
+            "network_bandwidth": 30
+        }
+    ],
+    "available_vcpus": {
+        "G": {
+            "ondemand": 32,
+            "spot": 128
+        },
+        "C": {
+            "ondemand": 256,
+            "spot": 256
+        },
+        "D": {
+            "ondemand": 256,
+            "spot": 256
+        },
+        "M": {
+            "ondemand": 256,
+            "spot": 256
+        },
+        "T": {
+            "ondemand": 256,
+            "spot": 256
+        }
+    }
+}
