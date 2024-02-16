@@ -1,0 +1,11 @@
+#!/bin/bash
+/home/ubuntu/.local/bin/torchrun \
+--nnodes={nnodes} \
+--nproc_per_node=1 \
+--node_rank={rank} \
+--master_addr="{ip}" \
+--master_port={port} ~/train.py \
+{epoch} \
+--batch_size=128 \
+--model={model_name} \
+--experiment_num={expnum}

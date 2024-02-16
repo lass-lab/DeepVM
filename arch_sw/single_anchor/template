@@ -1,0 +1,11 @@
+#!/bin/bash
+/home/ubuntu/.local/bin/torchrun \
+--nnodes={nodes} \
+--nproc_per_node=1 \
+--node_rank={rank} \
+--master_addr="{ip}" \
+--master_port={port} ./torch_save.py \
+{epoch} 1 \
+--batch_size=128 \
+--model_name="my_model" \
+| tee torch_save_rank_{rank}.result
