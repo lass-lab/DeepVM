@@ -1,1 +1,0 @@
-mpic++ -shared -o mpi_module.so -fPIC mpi_module.cpp
