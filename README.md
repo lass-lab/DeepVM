@@ -1,5 +1,5 @@
 # DeepVM : Integrating Spot and On-Demand VMs for Cost-Efficient Deep Learning Clusters in the Cloud
-
+[![DOI](https://zenodo.org/badge/701288709.svg)](https://zenodo.org/doi/10.5281/zenodo.10672947)
 ## Introduction
 
 This repository hosts the open-source implementation of DeepVM, a solution introduced in a paper submitted to CCGrid. DeepVM is designed for cost-efficient deep learning clusters in cloud environments, offering an innovative approach to integrating Spot and On-Demand VMs.
