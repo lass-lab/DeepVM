@@ -53,34 +53,12 @@ def FLOPP(v, type='spot'):
     return flops / ondemand_price * 3600
 
 def ScalingFactor(v, n):
-  a_values = {
-    "g3s.xlarge": 0.1408559584,
-    "g4dn.xlarge": 0.1338806402,
-    "g5.xlarge": 0.08533428072
-  }
-  b_values = {
-    "g3s.xlarge": 14.49263334,
-    "g4dn.xlarge": 12.87424514,
-    "g5.xlarge": 20.06669931
-  }
-  c_values= {
-    "g3s.xlarge": 13.53250952,
-    "g4dn.xlarge": 6.176666667,
-    "g5.xlarge": 4.962225551
-  }
+    a_val = v['a']
+    b_val = v['b']
+    c_val = v['c']
 
-  a_val = a_values[v['name']]
-  b_val = b_values[v['name']]
-  c_val = c_values[v['name']]
-
-  factor = K(a_val, b_val, c_val, n)
-  # if v['name'] == 'g3s.xlarge' and n==32:
-  #   print("g3", factor)
-  # if v['name'] == 'g4dn.xlarge' and n==32:
-  #   print("g4dn", factor)
-  # if v['name'] == 'g5.xlarge' and n==32:
-  #   print("g5", factor)
-  return factor
+    factor = K(a_val, b_val, c_val, n)
+    return factor
 
 def findOptimalTieringArch(willingness, buffer_size, checkpoint_size, scaling: bool):
     V = [instance for instance in data['instances'] if instance['type'] in ('G', 'P')]
@@ -90,10 +68,8 @@ def findOptimalTieringArch(willingness, buffer_size, checkpoint_size, scaling: b
 
     for v in V:
         for w in W:     
-            n_max = data['available_vcpus'][v['type']]['spot'] // v['vCPU']
-            m_max = data['available_vcpus'][w['type']]['ondemand'] // w['vCPU']
-            for n in range(1, n_max):
-                for m in range(1, m_max):
+            for n in range(1, MAX_LIMIT):  # MAX_LIMIT는 최대 한계값
+                for m in range(1, MAX_LIMIT):
                     if (
                         constraint1(v['spot_price'], w['ondemand_price'], n, m, willingness) and
                         constraint2(w['memory'], checkpoint_size, buffer_size) and
@@ -109,7 +85,7 @@ def findOptimalTieringArch(willingness, buffer_size, checkpoint_size, scaling: b
 
     sorted_configs = sorted(config_list, key=lambda x: x[0], reverse=True)
 
-    return sorted_configs[:3] if scaling else sorted_configs[0]
+    return sorted_configs[0]
 
 def findOptimalSingleAnchorArch(willingness, scaling: bool):
     V = [instance for instance in data['instances'] if instance['type'] in ('G', 'P')]
@@ -117,8 +93,7 @@ def findOptimalSingleAnchorArch(willingness, scaling: bool):
     config_list = []
 
     for v in V:
-        n_max = data['available_vcpus'][v['type']]['spot'] // v['vCPU']
-        for n in range(2, n_max):  # MAX_LIMIT는 최대 한계값
+        for n in range(2, MAX_LIMIT):  # MAX_LIMIT는 최대 한계값
             if v['spot_price'] * (n-1) + v['ondemand_price'] <= willingness:
                 if scaling:
                     Z = FLOPP(v) *n* ScalingFactor(v, n)
@@ -132,7 +107,7 @@ def findOptimalSingleAnchorArch(willingness, scaling: bool):
     
     sorted_configs = sorted(config_list, key=lambda x: x[0], reverse=True)
 
-    return sorted_configs[:3] if scaling else sorted_configs[0]
+    return sorted_configs[0]
 
 
 def cost_first(pw):
@@ -141,10 +116,8 @@ def cost_first(pw):
 
     for instance in data['instances']:
         if instance['type'] == 'G':
-            n_max = data['available_vcpus'][instance['type']]['spot'] // instance['vCPU']
             if pw >= instance['ondemand_price'] + instance['spot_price']:
                 n_spot = int((pw - instance['ondemand_price']) // instance['spot_price'])
-                n_spot = min(n_max-1, n_spot)
                 total_cost = n_spot * instance['spot_price'] + instance['ondemand_price']
 
                 if total_cost <= pw and n_spot + 1 > max_n:
@@ -161,10 +134,8 @@ def performance_first(pw):
                               key=lambda x: x['flops'], reverse=True)
 
     for instance in sorted_instances:
-        n_max = data['available_vcpus'][instance['type']]['spot'] // instance['vCPU']
         if pw >= instance['ondemand_price'] + instance['spot_price']:
             n_spot = max(int((pw - instance['ondemand_price']) // instance['spot_price']), 1)
-            n_spot = min(n_max-1, n_spot)
             total_cost = n_spot * instance['spot_price'] + instance['ondemand_price']
 
             if total_cost <= pw:
@@ -172,7 +143,7 @@ def performance_first(pw):
 
     return None
 
-def deepvm_noscale(pw):
+def deepvm_noscale(pw,bf,ckpsize):
     tier = findOptimalTieringArch(pw, bf, ckpsize, False)
     sa = findOptimalSingleAnchorArch(pw, False)
 
@@ -185,17 +156,18 @@ def deepvm_noscale(pw):
     else:
         return tier if tier[0] > sa[0] else sa
     
-def deepvm(pw):
-    tier_configs = findOptimalTieringArch(pw, bf, ckpsize, True)
-    sa_configs = findOptimalSingleAnchorArch(pw, True)
+def deepvm(pw,bf,ckpsize):
+    tier = findOptimalTieringArch(pw, bf, ckpsize, True)
+    sa = findOptimalSingleAnchorArch(pw, True)
 
-    if not tier_configs and not sa_configs:
+    if tier is None and sa is None:
         return None
-
-    combined_configs = (tier_configs or []) + (sa_configs or [])
-    sorted_combined_configs = sorted(combined_configs, key=lambda x: x[0], reverse=True)
-
-    return sorted_combined_configs[:3]
+    elif tier is None:
+        return sa
+    elif sa is None:
+        return tier
+    else:
+        return tier if tier[0] > sa[0] else sa
 
 def performance_eval(v, n):
     perf = v['flops']  * ScalingFactor(v, n) * n
@@ -207,17 +179,78 @@ def load_data(filename):
   with open(filename, "r", encoding="utf-8") as file:
     return json.load(file)
 
-data = load_data("data.json")
-bf = 2
-ckpsize = 0.5
-pw=3
+def main(pw_start, pw_stop, pw_step, bf, ckpsize):
+    global data
+    global MAX_LIMIT
 
-cost_first_config = cost_first(pw)
-performance_first_config = performance_first(pw)
-deepvm_noscale_config = deepvm_noscale(pw)
-deepvm_config = deepvm(pw)
+    data = load_data("simul_data.json")
+    MAX_LIMIT = 256
 
-print(cost_first_config)
-print(performance_first_config)
-print(deepvm_noscale_config)
-print(deepvm_config)
+    pw_array = np.arange(pw_start, pw_stop, pw_step)
+
+    results = {
+        'pw': pw_array,
+        'cost_first': [],
+        'performance_first': [],
+        'deepvm_noscale': [],
+        'deepvm': []
+    }
+
+    start_time = time.time()
+    iterations = len(pw_array)
+    for i, pw in enumerate(pw_array):
+        progress = (i + 1) / iterations
+        bar_length = 20
+        block = int(round(bar_length * progress))
+        if i == 0:
+            text = "\r[{0}] {1:.2f}% ({2}/{3})".format("#" * block + "-" * (bar_length - block), progress * 100, i+1, iterations)
+        else:
+            t = ((time.time()-start_time)/i)*(iterations-i)
+            text = "\r[{0}] {1:.2f}% ({2}/{3}) {4:.0f}m {5:.0f}s".format("#" * block + "-" * (bar_length - block), progress * 100, i, iterations, t//60, t%60)
+        sys.stdout.write("\033[K")
+        print(text, end='')
+        sys.stdout.flush()
+
+        cost_first_config = cost_first(pw)
+        performance_first_config = performance_first(pw)
+        deepvm_noscale_config = deepvm_noscale(pw,bf,ckpsize)
+        deepvm_config = deepvm(pw,bf,ckpsize)
+
+        # print(cost_first_config)
+        # print(performance_first_config)
+        # print(deepvm_noscale_config)
+        # print(deepvm_config)
+
+        if cost_first_config is not None:
+            results['cost_first'].append(performance_eval(cost_first_config[0], cost_first_config[1]))
+        
+        if performance_first_config is not None:
+            results['performance_first'].append(performance_eval(performance_first_config[0], performance_first_config[1]))
+        
+        if deepvm_noscale_config is not None:
+            if len(deepvm_noscale_config) == 3:
+                results['deepvm_noscale'].append(performance_eval(deepvm_noscale_config[1], deepvm_noscale_config[2]))
+            else:
+                results['deepvm_noscale'].append(performance_eval(deepvm_noscale_config[1], deepvm_noscale_config[3]))
+        
+        if deepvm_config is not None:
+            if len(deepvm_config) == 3:
+                results['deepvm'].append(performance_eval(deepvm_config[1], deepvm_config[2]))
+            else:
+                results['deepvm'].append(performance_eval(deepvm_config[1], deepvm_config[3]))
+        end_time = time.time()
+
+    with open('simul_results.pkl', 'wb') as f:
+        pickle.dump(results, f)
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser (description='DeepVM simulation')
+    parser.add_argument ('--pw_start', default=0, type=float, help='start of pw interval.')
+    parser.add_argument ('--pw_stop', default=10.1, type=float, help='end of pw interval (this value does not be included)')
+    parser.add_argument ('--pw_step', default=0.1, type=float, help='spacing between pw values')
+    parser.add_argument ('--buffer_size', default=0.5, type=float, help='buffer size of a remote node')
+    parser.add_argument ('--ckp_file_size', default=2, type=float, help='checkpoint file size of target DL model')
+    args = parser.parse_args ()
+
+    main(args.pw_start, args.pw_stop, args.pw_step, args.buffer_size, args.ckp_file_size)

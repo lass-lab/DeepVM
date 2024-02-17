@@ -1,18 +1,18 @@
 #!/bin/bash
 
-# 수정해야하는 부분
 NNODES=4
 MASTER_PORT=27170 # master port
 EPOCH=30
-
-# 수정 X
-IP=$(hostname -I | awk '{print $1}')
-MASTER_ADDR="$IP" # master address
 EXPNUM=1
 TEMPLATE_FILE="./template"
 REPEAT=1
 STAGE=0
 SKIP=-1
+
+###### DON'T MODIFY THESE ######
+IP=$(hostname -I | awk '{print $1}')
+MASTER_ADDR="$IP" # master address
+################################
 
 for ((k=0; k<$REPEAT; k++)); do
   if [ $STAGE -le $SKIP ]; then

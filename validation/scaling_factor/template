@@ -4,7 +4,7 @@
 --nproc_per_node=1 \
 --node_rank={rank} \
 --master_addr="{ip}" \
---master_port={port} ~/train.py \
+--master_port={port} ~/scaling_factor_validation.py \
 {epoch} \
 --batch_size=128 \
 --model={model_name} \

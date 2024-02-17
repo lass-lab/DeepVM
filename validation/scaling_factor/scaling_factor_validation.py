@@ -65,10 +65,10 @@ class Trainer:
         current_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
         if int(os.environ['RANK']) == 0:
             with open(result_file_name, 'a') as f:
-                if int(os.environ['WORLD_SIZE']) > 1:
-                    f.write(f"[{current_time}] training_time_{model_name}_{os.environ['WORLD_SIZE']}_nodes : {str(self.compute_duration)}, {str(self.network_duration)}\n")
-                else:
-                    f.write(f"[{current_time}] training_time_{model_name}_{os.environ['WORLD_SIZE']}_nodes : {str(self.compute_duration+self.network_duration)}\n")
+                # if int(os.environ['WORLD_SIZE']) > 1:
+                #     f.write(f"[{current_time}] training_time_{model_name}_{os.environ['WORLD_SIZE']}_nodes : {str(self.compute_duration)}, {str(self.network_duration)}\n")
+                # else:
+                f.write(f"[{current_time}] training_time_{model_name}_{os.environ['WORLD_SIZE']}_nodes : {str(self.compute_duration+self.network_duration)}\n")
                     
 
 def get_model(model_name):

@@ -5,7 +5,7 @@ python3 ./download.py
 
 # 각 노드에 필요한 파일 전송
 for((i=2; i<=$NNODES; i++)); do
-    scp ./single_anchor_example.py ./download.py worker$i:~/ &
+    scp ./scaling_factor_validation.py ./download.py worker$i:~/ &
 done
 wait
 

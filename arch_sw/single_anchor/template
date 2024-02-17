@@ -4,8 +4,8 @@
 --nproc_per_node=1 \
 --node_rank={rank} \
 --master_addr="{ip}" \
---master_port={port} ./torch_save.py \
+--master_port={port} ./single_anchor_example.py \
 {epoch} 1 \
 --batch_size=128 \
 --model_name="my_model" \
-| tee torch_save_rank_{rank}.result
+| tee single_anchor_example_rank_{rank}.result
