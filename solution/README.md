@@ -29,7 +29,7 @@ python run.py --pw 4 --buffer_size 0.7 --ckp_file_size 3
 
 Execute with the following command:
 
-```
+```bash
 python ./simulation.py --pw_start [start] --pw_stop [stop] --pw_step [step] --buffer_size [buffer size] --ckp_file_size [checkpoint file size]
 ```
 
@@ -43,6 +43,6 @@ The meaning of each option is as follows:
 
 For example, if you want to experiment with increasing the pw value from 0.1 by 0.3 up to 5, while setting the buffer size to 0.7GB and the checkpoint file size to 300MB, you would enter:
 
-```
+```bash
 python ./simulation.py --pw_start 0.1 --pw_stop 5.3 --pw_step 0.3 --buffer_size 0.7 --ckp_file_size 3
 ```
