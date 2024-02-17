@@ -149,7 +149,7 @@ def load_train_objs ():
         # val_set = datasets.ImageNet('/mnt/efs/imagenet', split='val', transform=val_transform)
     '''
 
-    model = models.resnet50(num_classes=10, pretrained=True)
+    model = models.resnet50(num_classes=10, pretrained=False)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-6)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=5, factor=0.1, verbose=False)

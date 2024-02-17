@@ -88,6 +88,17 @@ The part stored in `json` format is similar to the virtual instance data.
 }
 ```
 
+## Requirements
+Download the necessary Python packages using the following command:
+```bash
+pip install -r requirements.txt
+```
+Additionally, you may need to download the necessary Linux packages for graph generation using the following command:
+```bash
+sudo apt update
+sudo apt install texlive texlive-latex-extra texlive-fonts-recommended dvipng cm-super
+```
+
 ## Important Note
 - The implementation respects the double-anonymity policy of the CCGrid submission process.
 - The provided software and algorithms are for research and educational purposes. Users should exercise caution and understand the limitations and requirements of each component.

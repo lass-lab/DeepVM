@@ -246,6 +246,7 @@ class TRAIN:
         self.__shard_size = shard_size
         self.__shard_rank = shard_rank
         self.__destinaion_list = destination_list
+        self.i = 0
     
     def __method(self, obj):
         # Dump the model data to a byte buffer
@@ -288,7 +289,7 @@ class TRAIN:
         else:
             dump = bytes()
         print(f"[{self.__shard_rank}] [{self.i+1}] [serialization] [{time.time()}]")
-
+        self.i = self.i + 1
         # print(f"from {self.__MPI.rank} to {self.__destinaion_list[self.__MPI.rank]}")
         self.__MPI.send(data=dump, dest=self.__destinaion_list[self.__MPI.rank], tag=0)
         del dump

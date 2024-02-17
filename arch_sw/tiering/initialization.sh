@@ -23,7 +23,7 @@ for((i=2;i<=$TRAIN_NODES;i++)); do
 done
 wait
 
-for((i=2; i<=$TRAIN_NODES; i++)); do
+for((i=1; i<=$TRAIN_NODES; i++)); do
   ssh worker$i "~/compile.sh" &
 done
 for((i=1; i<=$REMOTE_NODES; i++)); do

@@ -3,3 +3,6 @@ pandas==2.0.2
 torch==2.0.1
 torchvision==0.15.2
 matplotlib==3.7.1
+SciencePlots==2.1.1
+latex==0.7.0
+openpyxl==3.1.2
