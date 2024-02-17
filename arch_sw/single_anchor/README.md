@@ -15,8 +15,8 @@
 Enter the private ip addresses of each node for the ip addresses.
 In this case, worker1 must always be the master.
 
-1. Add execution permission to all sh files. (chmod +x *.sh)
-2. Run initialization.sh. Then,
+1. Add execution permission to all sh files. (chmod +rx *.sh)
+2. Run initialization.sh. This script will automatically:
    - On the master, download and unzip the dataset (python3 ./download.py)
    - Send the dataset and training code to the workers (scp)
    - Remotely unzip the dataset on the worker. (Run python3 ./download.py on each node)
