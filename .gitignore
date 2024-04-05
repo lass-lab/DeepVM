@@ -1,2 +1,4 @@
 _DeepCheck_BASE/
 makeJson.py
+*.pkl
+*.eps

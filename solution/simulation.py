@@ -170,7 +170,7 @@ def deepvm(pw,bf,ckpsize):
         return tier if tier[0] > sa[0] else sa
 
 def performance_eval(v, n):
-    perf = v['flops']  * ScalingFactor(v, n) * n
+    perf = v['flops'] * n * ScalingFactor(v, n) * n
     if perf<0:
        print(v, n)
     return perf
